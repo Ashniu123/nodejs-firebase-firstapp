@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label for="Name">Name</label>
+                    <input type="text" class="form-control" id="Name" placeholder="Name">
+                </div>
+                <div class="form-group">
+                    <label for="Email">Email</label>
+                    <input type="email" class="form-control" id="Email" placeholder="Email">
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn btn-default" id="signin">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <hr/>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="pull-right">
+                <button class="btn btn-default" id="refresh">Refresh</button>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous"></script>
+<script>
+    function getData() {
+        $('tbody').html('');
+        $.ajax({
+            method: "GET",
+            url: "http://localhost:3000/endpoint",
+            success: function (data) {
+                console.log("Success");
+                console.log(JSON.stringify(data));
+                var keys = Object.keys(data);
+                keys.forEach(function (key) {
+                    $('tbody').append('<tr><td>' + data[key].name + '</td><td>' + data[key].email + '</td></tr>');
+                });
+            },
+            error: function () {
+                console.log('error');
+            }
+        });
+    }
+
+    $('#signin').click(function () {
+        var data = {};
+        data.name = $('#Name').val();
+        data.email = $('#Email').val();
+        data.isNew = true;
+        $.ajax({
+            method: "POST",
+            data: JSON.stringify(data),
+            contentType: "application/json",
+            url: "http://localhost:3000/endpoint",
+            success: function (data) {
+                console.log("Success");
+                console.log(JSON.stringify(data));
+                $('tbody').append('<tr><td>' + data.name + '</td><td>' + data.email + '</td></tr>');
+            },
+            error: function () {
+                console.log('error');
+            }
+        });
+    });
+
+    $('#refresh').click(function () {
+        getData();
+    });
+
+    $(document).ready(function () {
+        console.log("Ready");
+        getData();
+    });
+</script>
+</body>
+</html>

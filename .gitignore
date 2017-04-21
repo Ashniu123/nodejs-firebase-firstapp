@@ -1,3 +1,10 @@
+#Webstorm IDE
+.idea/
+
+#Other useless
+players.json
+Firebase.js
+
 # Logs
 logs
 *.log
